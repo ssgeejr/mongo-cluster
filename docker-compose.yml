@@ -1,0 +1,53 @@
+
+# reference documentation
+# http://www.tugberkugurlu.com/archive/setting-up-a-mongodb-replica-set-with-docker-and-connecting-to-it-with-a--net-core-app
+
+
+# docker network create my-mongo-cluster
+# docker run --name mongo-node1 -d --net my-mongo-cluster mongo --replSet “rs0"
+# docker run --name mongo-node1 -d --net my-mongo-cluster mongo --replSet “rs0"
+#First container is created and I need to run the same command to create two more MongoDB containers. The only difference is with the container names.
+# docker run --name mongo-node2 -d --net my-mongo-cluster mongo --replSet "rs0"
+# docker run --name mongo-node3 -d --net my-mongo-cluster mongo --replSet “rs0"
+
+version: '3.2'
+services:
+    node1:
+        image: 'mongo:4.0.1'
+        container_name: node1
+        networks:
+            mongo_cluster: {ipv4_address: 10.10.99.10, aliases: [prom]}
+        ports:
+            - '30001:27017'
+        command:
+            - '--replSet "rs0"'
+        tty: true
+        stdin_open: true
+        restart: always
+    node2:
+        image: 'mongo:4.0.1'
+        container_name: node2
+        networks:
+            mongo_cluster: {ipv4_address: 10.10.99.20, aliases: [node2]}
+        ports:
+            - '30002:27017'
+        command:
+            - '--replSet "rs0"'
+        tty: true
+        stdin_open: true
+        restart: always
+        node3: null
+networks:
+    mongo_cluster:
+        driver: bridge
+        ipam:
+            driver: default
+            config: [{subnet: 10.10.99.0/24}]
+           
+# docker run \
+# -p 30001:27017 \
+# --name mongo1 \
+# --net my-mongo-cluster \
+# mongo mongod --replSet my-mongo-set
+
+
