@@ -11,6 +11,13 @@ rs.conf() // to check conf
 rs.status() // replica status
 
 
+docs.pact.io/documentation/sharing_pacts.html
+
+github.com/bethesque/pact_broker
+
+github.com/bethesque/pact_broker
+
+
 quetion: docker namespace ... 
 
 
